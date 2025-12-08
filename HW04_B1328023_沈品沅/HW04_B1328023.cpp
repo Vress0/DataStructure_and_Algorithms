@@ -1,4 +1,7 @@
 #include<iostream>
+#include<cstdlib>   //rand, srand
+#include<ctime> //clock 
+
 using namespace std;
 
 struct Node{
@@ -91,10 +94,66 @@ void printPoly(Node* p) {
     cout << endl;
 }
 
+// 自動產生多項式
+Node* generatePoly(int count,bool dense){
+    Node* p = createPoly();
 
+    for (int i = 0; i < count; i++){
+        int exp;
+
+        if (dense){
+            exp = i;    // 連續
+        }
+        else{
+            exp = rand() % (count * 50);     
+        }
+        insertTerm(1, exp, p);    
+    }
+    return p;
+}
+
+double measureTime(Node* a,Node* b){
+    clock_t start, end;
+    start = clock();
+
+    multiply(a,b);
+
+    end = clock();
+
+
+    double ms = double(end-start)/CLOCKS_PER_SEC * 1000; //轉換成毫秒
+
+    return ms;
+}
+
+
+void timeTest(){
+    int m = 100;
+    int nlist[] = {10, 100, 1000, 2000};
+    int lens = 4;
+
+    cout << "\nn, dense(ms), nondense(ms)\n";                                       
+
+    for (int i = 0; i < lens;i++){
+        int n = nlist[i];
+
+        //產生多項式ＡB(dense)
+        Node* A_dense = generatePoly(m, true);
+        Node* B_dense = generatePoly(n, true);
+        double time_dense = measureTime(A_dense, B_dense);
+
+        //產生多項式ＡB(non-dense)
+        Node* A_nondense = generatePoly(m, false);
+        Node* B_nondense = generatePoly(n, false);
+        double time_nondense = measureTime(A_nondense, B_nondense);
+
+        cout << n << ", " << time_dense << ", " << time_nondense << endl;
+        
+    }
+}
 
 int main(){
-
+    // part1
     int m;
     cout << "Enter number of terms in polynomial A: ";
     cin >> m;
@@ -134,6 +193,9 @@ int main(){
     cout << "\nC(x) = A(x) * B(x) = ";
     printPoly(c);
 
+    // part2
+
+    timeTest();
 
     return 0;
 }
