@@ -30,13 +30,13 @@ void insertTerm(int coef,int exp,Node* c){
 
     // 找到插入位置
     //只要還沒掃回頭，而且目前節點的 exponent 還比你要插入的 exponent 大，就繼續往後移動
-    while (curr->exp >exp && curr != c){ 
+    while (curr != c && curr->exp >exp){ 
         prev = curr;
         curr = curr->next;
     }
 
     //同指數合併
-    if (curr->exp == exp && curr != c) {
+    if (curr != c && curr->exp == exp) {
         curr->coef += coef;
 
         // 如果合併後係數為0，刪除該節點
@@ -129,8 +129,8 @@ double measureTime(Node* a,Node* b){
 
 void timeTest(){
     int m = 100;
-    int nlist[] = {10, 100, 1000, 2000};
-    int lens = 4;
+    int nlist[] = {10, 100,200,300,400,500,600,700,800,900, 1000};
+    int lens = 11;
 
     cout << "\nn, dense(ms), nondense(ms)\n";                                       
 
